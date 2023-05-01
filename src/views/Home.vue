@@ -6,7 +6,7 @@ import Navbar from "../components/Navbar.vue";
 import { useUserStore } from "../stores/user";
 
 const creatingStoreAddress = ref("");
-const panelMode = ref("");
+const isShowPanel = ref(false);
 
 const userStore = useUserStore();
 </script>
@@ -17,19 +17,20 @@ const userStore = useUserStore();
   <Map
     :address="creatingStoreAddress"
     @address-change="(addressName) => (creatingStoreAddress = addressName)"
-    @show-panel="(value) => (panelMode = value)"
+    @show-panel="isShowPanel = true"
   />
 
   <BottomPanelStoreCreate
     v-if="userStore.type === 'creator'"
+    :isShowPanel="isShowPanel"
     :address="creatingStoreAddress"
     @close="
       () => {
-        panelMode = '';
+        isShowPanel = false;
         creatingStoreAddress = '';
       }
     "
-    :panelMode="panelMode"
+    @change-panel-mode="(mode) => (panelMode = mode)"
   />
 </template>
 

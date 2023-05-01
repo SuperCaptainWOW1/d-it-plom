@@ -1,18 +1,31 @@
 <script setup>
+import { ref } from "vue";
+
 const props = defineProps({
   address: String,
-  panelMode: String,
+  isShowPanel: Boolean,
 });
 
 const emit = defineEmits({
   close: null,
 });
+
+const panelMode = ref("small");
+const isEditActive = ref(false);
+
+function startEdit() {
+  isEditActive.value = true;
+
+  panelMode.value = "big";
+}
 </script>
 
 <template>
   <Transition name="slide">
-    <div v-if="panelMode" :class="'store-create-block ' + panelMode">
-      <div v-if="address">
+    <div v-if="isShowPanel" :class="'store-create-block ' + panelMode">
+      <div v-if="isEditActive"></div>
+
+      <div v-else-if="address">
         <span class="close" @click="emit('close')">
           <font-awesome-icon :icon="['fas', 'times']" />
         </span>
@@ -21,7 +34,7 @@ const emit = defineEmits({
         <p class="address-text">
           {{ address }}
         </p>
-        <button>Добавить предприятие</button>
+        <button @click="startEdit">Добавить предприятие</button>
       </div>
       <div v-else class="loader">
         <div></div>

@@ -72,7 +72,7 @@ onMounted(() => {
       addressPending = false;
     });
 
-    emit("showPanel", "small");
+    emit("showPanel");
   });
 });
 
