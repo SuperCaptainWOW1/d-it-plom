@@ -1,11 +1,14 @@
 <script setup>
 import { ref } from "vue";
-import BottomPanel from "../components/BottomPanel.vue";
+import BottomPanelStoreCreate from "../components/BottomPanelStoreCreate.vue";
 import Map from "../components/Map.vue";
 import Navbar from "../components/Navbar.vue";
+import { useUserStore } from "../stores/user";
 
 const creatingStoreAddress = ref("");
 const panelMode = ref("");
+
+const userStore = useUserStore();
 </script>
 
 <template>
@@ -17,7 +20,8 @@ const panelMode = ref("");
     @show-panel="(value) => (panelMode = value)"
   />
 
-  <BottomPanel
+  <BottomPanelStoreCreate
+    v-if="userStore.type === 'creator'"
     :address="creatingStoreAddress"
     @close="
       () => {

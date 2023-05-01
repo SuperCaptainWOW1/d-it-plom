@@ -3,6 +3,10 @@ import MapboxLanguage from "@mapbox/mapbox-gl-language";
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js";
 import { onMounted, ref, watch } from "vue";
 
+import { useUserStore } from "../stores/user";
+
+const userStore = useUserStore();
+
 const props = defineProps({
   address: {
     type: String,
@@ -22,6 +26,7 @@ const emit = defineEmits({
 });
 
 const createdMarker = ref(null);
+let addressPending = false;
 
 onMounted(() => {
   mapboxgl.accessToken =
@@ -40,6 +45,8 @@ onMounted(() => {
   );
 
   map.on("click", (e) => {
+    if (userStore.type !== "creator") return;
+
     if (createdMarker.value) createdMarker.value.remove();
 
     // Empty address value to show loader
@@ -51,14 +58,18 @@ onMounted(() => {
       .setLngLat([e.lngLat.lng, e.lngLat.lat])
       .addTo(map);
 
+    addressPending = true;
     getLocationGeoData(e.lngLat).then((geoData) => {
       console.log(geoData);
       const dataElement = geoData.features[0];
+
       emit(
         "addressChange",
         dataElement.properties.address ||
           `${dataElement.text} ${dataElement.address || ""}`
       );
+
+      addressPending = false;
     });
 
     emit("showPanel", "small");
@@ -69,7 +80,8 @@ onMounted(() => {
 watch(
   () => props.address,
   (address) => {
-    if (!address && createdMarker.value) createdMarker.value.remove();
+    if (!address && !addressPending && createdMarker.value)
+      createdMarker.value.remove();
   }
 );
 

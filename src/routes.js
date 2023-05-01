@@ -6,7 +6,12 @@ import NotFound from "./views/NotFound.vue";
 import { useUserStore } from "./stores/user";
 
 const routes = [
-  { name: "Home", path: "/", component: Home, meta: { requiresAuth: true } },
+  {
+    name: "Home",
+    path: "/",
+    component: Home,
+    meta: { requiresAuth: true },
+  },
   {
     name: "Auth",
     path: "/auth",
