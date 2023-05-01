@@ -1,7 +1,17 @@
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "../stores/user";
+
+const userStore = useUserStore();
+const router = useRouter();
 
 const isShowMenu = ref(false);
+
+function quit() {
+  userStore.logout();
+  router.push("/auth");
+}
 </script>
 
 <template>
@@ -16,8 +26,8 @@ const isShowMenu = ref(false);
     </div>
     <ul class="menu-items">
       <li>Профиль</li>
-      <li>Ответы</li>
       <li>Ваши заявки</li>
+      <li @click="quit">Выйти</li>
     </ul>
 
     <span

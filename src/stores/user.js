@@ -7,9 +7,13 @@ export const useUserStore = defineStore("user", {
     type: useLocalStorage("user/type", ""), // "creator" | "user"
   }),
   actions: {
-    setUser(user) {
+    login(user) {
       this.username = user.username;
       this.type = user.type;
+    },
+    logout() {
+      this.username = "";
+      this.type = "";
     },
   },
 });

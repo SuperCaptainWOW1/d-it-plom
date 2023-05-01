@@ -19,13 +19,13 @@ function authorize(e) {
   if (username.value === "creator" && password.value === "cool") {
     isValidationError.value = false;
 
-    userStore.setUser({ username: username.value, type: "creator" });
+    userStore.login({ username: username.value, type: "creator" });
 
     router.push("/");
   } else if (username.value === "user" && password.value === "123") {
     isValidationError.value = false;
 
-    userStore.setUser({ username: username.value, type: "user" });
+    userStore.login({ username: username.value, type: "user" });
 
     router.push("/");
   } else {
