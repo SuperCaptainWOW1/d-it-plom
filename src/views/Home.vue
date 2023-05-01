@@ -12,11 +12,21 @@ const panelMode = ref("");
   <Navbar />
 
   <Map
+    :address="creatingStoreAddress"
     @address-change="(addressName) => (creatingStoreAddress = addressName)"
     @show-panel="(value) => (panelMode = value)"
   />
 
-  <BottomPanel :address="creatingStoreAddress" :panelMode="panelMode" />
+  <BottomPanel
+    :address="creatingStoreAddress"
+    @close="
+      () => {
+        panelMode = '';
+        creatingStoreAddress = '';
+      }
+    "
+    :panelMode="panelMode"
+  />
 </template>
 
 <style scoped></style>

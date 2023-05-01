@@ -1,7 +1,7 @@
 <script setup>
 import MapboxLanguage from "@mapbox/mapbox-gl-language";
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const props = defineProps({
   address: {
@@ -65,47 +65,13 @@ onMounted(() => {
   });
 });
 
-// document.addEventListener("DOMContentLoaded", () => {
-//   mapboxgl.accessToken =
-//     "pk.eyJ1Ijoid293MSIsImEiOiJjazZ4dWhpZ3gwaGw3M21zNmI2aGI0MHAzIn0.3EVQozMg2pXtcj1wNJWRlA";
-//   const map = new mapboxgl.Map({
-//     container: "map",
-//     style: "mapbox://styles/mapbox/streets-v11",
-//     center: [37.618423, 55.751244], // starting center in [lng, lat]
-//     zoom: 11, // starting zoom
-//   });
-
-//   map.addControl(
-//     new MapboxLanguage({
-//       defaultLanguage: "ru",
-//     })
-//   );
-
-//   map.on("click", (e) => {
-//     if (createdMarker.value) createdMarker.value.remove();
-
-//     // Empty address value to show loader
-//     emit("addressChange", "");
-
-//     createdMarker.value = new mapboxgl.Marker({
-//       color: "#60BA62",
-//     })
-//       .setLngLat([e.lngLat.lng, e.lngLat.lat])
-//       .addTo(map);
-
-//     getLocationGeoData(e.lngLat).then((geoData) => {
-//       console.log(geoData);
-//       const dataElement = geoData.features[0];
-//       emit(
-//         "addressChange",
-//         dataElement.properties.address ||
-//           `${dataElement.text} ${dataElement.address || ""}`
-//       );
-//     });
-
-//     emit("showPanel", "small");
-//   });
-// });
+// Remove pin if address is empty
+watch(
+  () => props.address,
+  (address) => {
+    if (!address && createdMarker.value) createdMarker.value.remove();
+  }
+);
 
 async function getLocationGeoData(lngLat) {
   const response = await fetch(

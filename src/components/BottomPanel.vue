@@ -3,21 +3,31 @@ const props = defineProps({
   address: String,
   panelMode: String,
 });
+
+const emit = defineEmits({
+  close: null,
+});
 </script>
 
 <template>
-  <div :class="'store-create-block ' + panelMode" v-if="panelMode">
-    <div v-if="address">
-      <p class="address-title">Адрес:</p>
-      <p class="address-text">
-        {{ address }}
-      </p>
-      <button>Добавить предприятие</button>
+  <Transition name="slide">
+    <div v-if="panelMode" :class="'store-create-block ' + panelMode">
+      <div v-if="address">
+        <span class="close" @click="emit('close')">
+          <font-awesome-icon :icon="['fas', 'times']" />
+        </span>
+
+        <p class="address-title">Адрес:</p>
+        <p class="address-text">
+          {{ address }}
+        </p>
+        <button>Добавить предприятие</button>
+      </div>
+      <div v-else class="loader">
+        <div></div>
+      </div>
     </div>
-    <div v-else class="loader">
-      <div></div>
-    </div>
-  </div>
+  </Transition>
 </template>
 
 <style scoped>
@@ -34,7 +44,7 @@ const props = defineProps({
 }
 .store-create-block.small {
   height: 22vh;
-  animation: slideInSmall 0.2s ease;
+  /* animation: slideInSmall 0.2s ease; */
   display: block;
 }
 .store-create-block.normal {
@@ -56,16 +66,14 @@ const props = defineProps({
   margin-bottom: 0.6rem;
 }
 
-@keyframes slideInSmall {
-  from {
-    bottom: -18vh;
-    opacity: 0.5;
-  }
-
-  to {
-    bottom: 0;
-    opacity: 1;
-  }
+.slide-enter-active,
+.slide-leave-active {
+  transition: 0.2s ease;
+}
+.slide-enter-from,
+.slide-leave-to {
+  bottom: -10%;
+  opacity: 0;
 }
 
 button {
@@ -77,6 +85,13 @@ button {
   box-shadow: 2px 2px 10px 4px rgba(0, 0, 0, 0.1);
   margin: 0 1rem;
   width: calc(100% - 2rem);
+}
+
+.close {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.6rem;
+  padding: 0.5rem;
 }
 
 /* Loader animation */
