@@ -15,12 +15,13 @@ watch([searchInputElement], ([searchInputElement]) => {
 
 <template>
   <Transition name="fade">
-    <input
-      v-if="isSearchActive"
-      ref="searchInputElement"
-      @blur="isSearchActive = false"
-      type="text"
-    />
+    <div v-if="isSearchActive" class="input-wrapper">
+      <input
+        ref="searchInputElement"
+        @blur="isSearchActive = false"
+        type="text"
+      />
+    </div>
   </Transition>
   <span @click="searchOnClick" :class="{ close: isSearchActive }">
     <font-awesome-icon
@@ -32,6 +33,11 @@ watch([searchInputElement], ([searchInputElement]) => {
 </template>
 
 <style scoped>
+.input-wrapper {
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 0.4rem;
+  border-radius: 10px;
+}
 input {
   border: none;
   border-bottom: 2px solid #60ba62;
@@ -42,7 +48,7 @@ input {
 }
 
 input:focus {
-  outline: 1px solid #306531;
+  outline: none;
 }
 
 span {
