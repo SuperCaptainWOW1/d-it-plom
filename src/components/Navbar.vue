@@ -1,12 +1,12 @@
 <script setup>
-import Menu from "./Menu.vue";
-import Search from "./Search.vue";
+import NavbarMenu from "./NavbarMenu.vue";
+import NavbarSearch from "./NavbarSearch.vue";
 </script>
 
 <template>
   <div class="wrapper">
-    <Menu />
-    <Search />
+    <NavbarMenu />
+    <NavbarSearch />
   </div>
 </template>
 
