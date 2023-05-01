@@ -1,13 +1,14 @@
+import { useLocalStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
 
-export const useAlertsStore = defineStore("user", {
+export const useUserStore = defineStore("user", {
   state: () => ({
-    name: "",
-    type: "",
+    username: useLocalStorage("user/login", ""),
+    type: useLocalStorage("user/type", ""), // "creator" | "user"
   }),
   actions: {
     setUser(user) {
-      this.name = user.name;
+      this.username = user.username;
       this.type = user.type;
     },
   },

@@ -1,7 +1,7 @@
 <script setup>
 import MapboxLanguage from "@mapbox/mapbox-gl-language";
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 const props = defineProps({
   address: {
@@ -23,7 +23,7 @@ const emit = defineEmits({
 
 const createdMarker = ref(null);
 
-document.addEventListener("DOMContentLoaded", () => {
+onMounted(() => {
   mapboxgl.accessToken =
     "pk.eyJ1Ijoid293MSIsImEiOiJjazZ4dWhpZ3gwaGw3M21zNmI2aGI0MHAzIn0.3EVQozMg2pXtcj1wNJWRlA";
   const map = new mapboxgl.Map({
@@ -65,6 +65,48 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// document.addEventListener("DOMContentLoaded", () => {
+//   mapboxgl.accessToken =
+//     "pk.eyJ1Ijoid293MSIsImEiOiJjazZ4dWhpZ3gwaGw3M21zNmI2aGI0MHAzIn0.3EVQozMg2pXtcj1wNJWRlA";
+//   const map = new mapboxgl.Map({
+//     container: "map",
+//     style: "mapbox://styles/mapbox/streets-v11",
+//     center: [37.618423, 55.751244], // starting center in [lng, lat]
+//     zoom: 11, // starting zoom
+//   });
+
+//   map.addControl(
+//     new MapboxLanguage({
+//       defaultLanguage: "ru",
+//     })
+//   );
+
+//   map.on("click", (e) => {
+//     if (createdMarker.value) createdMarker.value.remove();
+
+//     // Empty address value to show loader
+//     emit("addressChange", "");
+
+//     createdMarker.value = new mapboxgl.Marker({
+//       color: "#60BA62",
+//     })
+//       .setLngLat([e.lngLat.lng, e.lngLat.lat])
+//       .addTo(map);
+
+//     getLocationGeoData(e.lngLat).then((geoData) => {
+//       console.log(geoData);
+//       const dataElement = geoData.features[0];
+//       emit(
+//         "addressChange",
+//         dataElement.properties.address ||
+//           `${dataElement.text} ${dataElement.address || ""}`
+//       );
+//     });
+
+//     emit("showPanel", "small");
+//   });
+// });
+
 async function getLocationGeoData(lngLat) {
   const response = await fetch(
     `https://api.mapbox.com/geocoding/v5/mapbox.places/${lngLat.lng},${lngLat.lat}.json?language=ru&access_token=${mapboxgl.accessToken}`
@@ -75,7 +117,7 @@ async function getLocationGeoData(lngLat) {
 </script>
 
 <template>
-  <div id="map"></div>
+  <div id="map" ref="map"></div>
 </template>
 
 <style scoped>

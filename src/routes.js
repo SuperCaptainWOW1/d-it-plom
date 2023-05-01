@@ -1,0 +1,31 @@
+import { createRouter, createWebHistory } from "vue-router";
+import Auth from "./views/Auth.vue";
+import Home from "./views/Home.vue";
+import NotFound from "./views/NotFound.vue";
+
+import { useUserStore } from "./stores/user";
+
+const routes = [
+  { name: "Home", path: "/", component: Home, meta: { requiresAuth: true } },
+  {
+    name: "Auth",
+    path: "/auth",
+    component: Auth,
+  },
+  // will match everything and put it under `$route.params.pathMatch`
+  { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound },
+];
+
+const router = createRouter({
+  // Provide the history implementation to use. We are using the hash history for simplicity here.
+  history: createWebHistory(),
+  routes,
+});
+
+router.beforeEach((to) => {
+  const userStore = useUserStore();
+
+  if (to.meta.requiresAuth && !userStore.username) return "/auth";
+});
+
+export default router;

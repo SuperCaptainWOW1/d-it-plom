@@ -1,6 +1,8 @@
 import { createPinia } from "pinia";
 import { createApp } from "vue";
+
 import App from "./App.vue";
+import router from "./routes";
 import "./style.css";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -16,6 +18,7 @@ library.add(faMagnifyingGlass, faTimes, faBars, faChevronLeft);
 const pinia = createPinia();
 
 createApp(App)
+  .use(router)
   .use(pinia)
   .component("font-awesome-icon", FontAwesomeIcon)
   .mount("#app");

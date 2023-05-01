@@ -14,9 +14,11 @@
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/vue-fontawesome": "^3.0.3",
     "@mapbox/mapbox-gl-language": "^1.0.1",
+    "@vueuse/core": "^10.1.0",
     "mapbox-gl": "^2.14.1",
     "pinia": "^2.0.35",
-    "vue": "^3.2.47"
+    "vue": "^3.2.47",
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.1.0",
