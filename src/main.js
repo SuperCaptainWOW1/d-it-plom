@@ -1,3 +1,4 @@
+import { createPinia } from "pinia";
 import { createApp } from "vue";
 import App from "./App.vue";
 import "./style.css";
@@ -12,4 +13,9 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons/faTimes";
 
 library.add(faMagnifyingGlass, faTimes, faBars, faChevronLeft);
 
-createApp(App).component("font-awesome-icon", FontAwesomeIcon).mount("#app");
+const pinia = createPinia();
+
+createApp(App)
+  .use(pinia)
+  .component("font-awesome-icon", FontAwesomeIcon)
+  .mount("#app");
