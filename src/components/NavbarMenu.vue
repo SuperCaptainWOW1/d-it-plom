@@ -24,19 +24,33 @@ function quit() {
       <span class="name">Антоха</span>
       <div class="avatar"></div>
     </div>
-    <ul class="menu-items">
-      <li>Профиль</li>
-      <li>Ваши заявки</li>
-      <li @click="quit">Выйти</li>
-    </ul>
 
-    <span
-      v-if="isShowMenu"
-      class="close-menu-button"
-      @click="isShowMenu = false"
+    <p
+      v-if="userStore.type === 'creator'"
+      class="open-list-button"
+      @click="$router.push('/companies')"
     >
-      <font-awesome-icon :icon="['fas', 'chevron-left']" />
-    </span>
+      Ваши магазины
+    </p>
+    <p
+      v-else-if="userStore.type === 'user'"
+      class="open-list-button"
+      @click="gog"
+    >
+      Ваши заявки
+    </p>
+
+    <div class="bottom-part">
+      <button @click="quit">Выйти</button>
+
+      <span
+        v-if="isShowMenu"
+        class="close-menu-button"
+        @click="isShowMenu = false"
+      >
+        <font-awesome-icon :icon="['fas', 'chevron-left']" />
+      </span>
+    </div>
   </div>
 </template>
 
@@ -51,7 +65,6 @@ function quit() {
   padding: 1rem 1.5rem;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   z-index: 10;
 }
 .open-menu-button {
@@ -85,13 +98,24 @@ function quit() {
   border-radius: 50%;
 }
 
-.menu-items {
-  list-style: none;
-  font-size: 0.8rem;
-  width: 100%;
+.open-list-button {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
 }
 
-.menu-items li {
-  margin-bottom: 0.6rem;
+.bottom-part {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.bottom-part button {
+  border: none;
+  border-radius: 8px;
+  padding: 0 10px;
+  background-color: #fff;
+  color: #60ba62;
+  box-shadow: 2px 2px 10px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 </style>
