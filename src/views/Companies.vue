@@ -1,9 +1,25 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import Loader from "../components/Loader.vue";
 import NavbarMenu from "../components/NavbarMenu.vue";
 import NavbarSearch from "../components/NavbarSearch.vue";
 
+import { apiAddress } from "../const";
+
 const isShowTitle = ref(true);
+const companies = ref([]);
+
+const isCompaniesRecieved = ref(false);
+
+async function getCompanies() {
+  companies.value = await (await fetch(`${apiAddress}/companies`)).json();
+
+  isCompaniesRecieved.value = true;
+}
+
+onMounted(() => {
+  getCompanies();
+});
 </script>
 
 <template>
@@ -12,43 +28,20 @@ const isShowTitle = ref(true);
     <p v-if="isShowTitle">Мои магазины</p>
     <NavbarSearch />
   </div>
-  <div class="companies-list">
-    <div class="company-item">
+  <div v-if="isCompaniesRecieved" class="companies-list">
+    <div
+      v-if="companies.length"
+      class="company-item"
+      v-for="company in companies"
+      :key="company.id"
+    >
       <!-- <img src="" alt=""> -->
-      <p class="company-name">Фасоль</p>
-      <p class="company-address">ул. Винокурова, 2</p>
+      <p class="company-name">{{ company.name }}</p>
+      <p class="company-address">{{ company.address }}</p>
     </div>
-
-    <div class="company-item">
-      <!-- <img src="" alt=""> -->
-      <p class="company-name">Фасоль</p>
-      <p class="company-address">ул. Винокурова, 2</p>
-    </div>
-
-    <div class="company-item">
-      <!-- <img src="" alt=""> -->
-      <p class="company-name">Фасоль</p>
-      <p class="company-address">ул. Винокурова, 2</p>
-    </div>
-
-    <div class="company-item">
-      <!-- <img src="" alt=""> -->
-      <p class="company-name">Фасоль</p>
-      <p class="company-address">ул. Винокурова, 2</p>
-    </div>
-
-    <div class="company-item">
-      <!-- <img src="" alt=""> -->
-      <p class="company-name">Фасоль</p>
-      <p class="company-address">ул. Винокурова, 2</p>
-    </div>
-
-    <div class="company-item">
-      <!-- <img src="" alt=""> -->
-      <p class="company-name">Фасоль</p>
-      <p class="company-address">ул. Винокурова, 2</p>
-    </div>
+    <p class="message empty-list" v-else>Список магазинов пуст</p>
   </div>
+  <Loader v-else />
 
   <button @click="$router.push('/')">Добавить предприятие</button>
 </template>
@@ -99,6 +92,11 @@ button {
 
   position: absolute;
   bottom: 1rem;
+}
+
+.message.empty-list {
+  text-align: center;
+  color: #858585;
 }
 
 /* W3C standard
