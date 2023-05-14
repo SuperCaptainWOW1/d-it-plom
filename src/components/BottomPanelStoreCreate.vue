@@ -3,10 +3,14 @@ import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useGlobalStore } from "../stores/global";
 
 import Loader from "../components/Loader.vue";
 
+import { apiAddress } from "../const";
+
 const router = useRouter();
+const globalStore = useGlobalStore();
 
 const props = defineProps({
   address: String,
@@ -50,10 +54,18 @@ async function addCompany() {
 
   const newCompany = {
     name: formData.name,
+    address: props.address,
     votesNumber: formData.votesNumber,
   };
 
   // Make POST request to db
+  await fetch(`${apiAddress}/companies`, {
+    method: "POST",
+    body: JSON.stringify(newCompany),
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+    },
+  });
 
   router.push("/companies");
 }
@@ -181,12 +193,10 @@ button {
   font-weight: 700;
   width: 100%;
   color: #212121;
-  border-bottom: 2px solid transparent;
 }
 
 .edit-name-input:focus {
   outline: none;
-  border-bottom: 2px solid #212121;
 }
 
 .edit-address {

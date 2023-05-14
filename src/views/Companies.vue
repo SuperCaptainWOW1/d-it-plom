@@ -4,15 +4,15 @@ import Loader from "../components/Loader.vue";
 import NavbarMenu from "../components/NavbarMenu.vue";
 import NavbarSearch from "../components/NavbarSearch.vue";
 
-import { apiAddress } from "../const";
+import { useGlobalStore } from "../stores/global";
 
 const isShowTitle = ref(true);
-const companies = ref([]);
 
+const globalStore = useGlobalStore();
 const isCompaniesRecieved = ref(false);
 
 async function getCompanies() {
-  companies.value = await (await fetch(`${apiAddress}/companies`)).json();
+  await globalStore.getCompanies();
 
   isCompaniesRecieved.value = true;
 }
@@ -30,9 +30,9 @@ onMounted(() => {
   </div>
   <div v-if="isCompaniesRecieved" class="companies-list">
     <div
-      v-if="companies.length"
+      v-if="globalStore.companies.length"
       class="company-item"
-      v-for="company in companies"
+      v-for="company in globalStore.companies"
       :key="company.id"
     >
       <!-- <img src="" alt=""> -->
