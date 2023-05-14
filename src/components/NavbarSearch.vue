@@ -1,6 +1,10 @@
 <script setup>
 import { ref, watch } from "vue";
 
+// const emit = defineEmits({
+//   onActive: null,
+// });
+
 const isSearchActive = ref(false);
 
 const searchInputElement = ref(null);
@@ -34,9 +38,13 @@ watch([searchInputElement], ([searchInputElement]) => {
 
 <style scoped>
 .input-wrapper {
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 1);
   padding: 0.4rem;
   border-radius: 10px;
+  z-index: 10;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 input {
   border: none;

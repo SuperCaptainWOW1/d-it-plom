@@ -15,7 +15,7 @@ function quit() {
 </script>
 
 <template>
-  <span class="open-menu-button" v-if="!isShowMenu" @click="isShowMenu = true">
+  <span class="open-menu-button" @click="isShowMenu = true">
     <font-awesome-icon :icon="['fas', 'bars']" />
   </span>
 
@@ -52,6 +52,7 @@ function quit() {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  z-index: 10;
 }
 .open-menu-button {
   color: #60ba62;

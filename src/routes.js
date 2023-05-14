@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Auth from "./views/Auth.vue";
+import Companies from "./views/Companies.vue";
 import Home from "./views/Home.vue";
 import NotFound from "./views/NotFound.vue";
 
@@ -17,6 +18,12 @@ const routes = [
     path: "/auth",
     component: Auth,
   },
+  {
+    name: "Companies",
+    path: "/companies",
+    meta: { requiresAuth: true, requiresCreatorRights: true },
+    component: Companies,
+  },
   // will match everything and put it under `$route.params.pathMatch`
   { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound },
 ];
@@ -31,6 +38,7 @@ router.beforeEach((to) => {
   const userStore = useUserStore();
 
   if (to.meta.requiresAuth && !userStore.username) return "/auth";
+  if (to.meta.requiresCreatorRights && userStore.type !== "creator") return "/";
 });
 
 export default router;
