@@ -6,6 +6,9 @@ import Navbar from "../components/Navbar.vue";
 import { useUserStore } from "../stores/user";
 
 const creatingStoreAddress = ref("");
+const currentPlaceLng = ref(0);
+const currentPlaceLat = ref(0);
+
 const isShowPanel = ref(false);
 
 const userStore = useUserStore();
@@ -16,7 +19,13 @@ const userStore = useUserStore();
 
   <Map
     :address="creatingStoreAddress"
-    @address-change="(addressName) => (creatingStoreAddress = addressName)"
+    @point-select="
+      (pointData) => {
+        creatingStoreAddress = pointData.address;
+        currentPlaceLng = pointData.lng;
+        currentPlaceLat = pointData.lat;
+      }
+    "
     @show-panel="isShowPanel = true"
   />
 
@@ -24,10 +33,14 @@ const userStore = useUserStore();
     v-if="userStore.type === 'creator'"
     :isShowPanel="isShowPanel"
     :address="creatingStoreAddress"
+    :lng="currentPlaceLng"
+    :lat="currentPlaceLat"
     @close="
       () => {
         isShowPanel = false;
         creatingStoreAddress = '';
+        currentPlaceLng = 0;
+        currentPlaceLat = 0;
       }
     "
     @change-panel-mode="(mode) => (panelMode = mode)"

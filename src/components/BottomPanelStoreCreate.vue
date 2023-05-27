@@ -15,6 +15,8 @@ const globalStore = useGlobalStore();
 const props = defineProps({
   address: String,
   isShowPanel: Boolean,
+  lng: Number,
+  lat: Number,
 });
 
 const emit = defineEmits({
@@ -56,7 +58,11 @@ async function addCompany() {
     name: formData.name,
     address: props.address,
     votesNumber: formData.votesNumber,
+    lng: props.lng,
+    lat: props.lat,
   };
+
+  console.log(newCompany);
 
   // Make POST request to db
   await fetch(`${apiAddress}/companies`, {

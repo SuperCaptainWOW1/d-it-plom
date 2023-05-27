@@ -3,9 +3,11 @@ import MapboxLanguage from "@mapbox/mapbox-gl-language";
 import mapboxgl from "mapbox-gl/dist/mapbox-gl.js";
 import { onMounted, ref, watch } from "vue";
 
+import { useGlobalStore } from "../stores/global";
 import { useUserStore } from "../stores/user";
 
 const userStore = useUserStore();
+const globalStore = useGlobalStore();
 
 const props = defineProps({
   address: {
@@ -14,14 +16,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-  addressChange: (address) => {
-    if (typeof address === "string") {
-      return true;
-    } else {
-      console.warn("Recieving address has failed");
-      return false;
-    }
-  },
+  pointSelect: null,
   showPanel: null,
 });
 
@@ -50,7 +45,7 @@ onMounted(() => {
     if (createdMarker.value) createdMarker.value.remove();
 
     // Empty address value to show loader
-    emit("addressChange", "");
+    emit("pointSelect", "");
 
     createdMarker.value = new mapboxgl.Marker({
       color: "#60BA62",
@@ -63,16 +58,28 @@ onMounted(() => {
       console.log(geoData);
       const dataElement = geoData.features[0];
 
-      emit(
-        "addressChange",
-        dataElement.properties.address ||
-          `${dataElement.text} ${dataElement.address || ""}`
-      );
+      emit("pointSelect", {
+        address:
+          dataElement.properties.address ||
+          `${dataElement.text} ${dataElement.address || ""}`,
+        lng: e.lngLat.lng,
+        lat: e.lngLat.lat,
+      });
 
       addressPending = false;
     });
 
     emit("showPanel");
+  });
+
+  globalStore.getCompanies().then(() => {
+    globalStore.companies.forEach((company) => {
+      new mapboxgl.Marker({
+        color: "#60BA62",
+      })
+        .setLngLat([company.lng, company.lat])
+        .addTo(map);
+    });
   });
 });
 
