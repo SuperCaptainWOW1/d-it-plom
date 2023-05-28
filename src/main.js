@@ -11,9 +11,10 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons/faBars";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons/faChevronLeft";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons/faMagnifyingGlass";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons/faPenToSquare";
 import { faTimes } from "@fortawesome/free-solid-svg-icons/faTimes";
 
-library.add(faMagnifyingGlass, faTimes, faBars, faChevronLeft);
+library.add(faMagnifyingGlass, faTimes, faBars, faChevronLeft, faPenToSquare);
 
 const pinia = createPinia();
 

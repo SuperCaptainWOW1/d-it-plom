@@ -43,6 +43,7 @@ onMounted(() => {
     if (userStore.type !== "creator") return;
 
     if (createdMarker.value) createdMarker.value.remove();
+    globalStore.selectedCompany = null;
 
     // Empty address value to show loader
     emit("pointSelect", "");

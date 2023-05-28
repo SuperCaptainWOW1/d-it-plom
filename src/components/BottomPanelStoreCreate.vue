@@ -3,14 +3,12 @@ import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import { useGlobalStore } from "../stores/global";
 
 import Loader from "../components/Loader.vue";
 
 import { apiAddress } from "../const";
 
 const router = useRouter();
-const globalStore = useGlobalStore();
 
 const props = defineProps({
   address: String,

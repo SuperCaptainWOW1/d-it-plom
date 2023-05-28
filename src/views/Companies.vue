@@ -1,10 +1,13 @@
 <script setup>
 import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 import Loader from "../components/Loader.vue";
 import NavbarMenu from "../components/NavbarMenu.vue";
 import NavbarSearch from "../components/NavbarSearch.vue";
 
 import { useGlobalStore } from "../stores/global";
+
+const router = useRouter();
 
 const isShowTitle = ref(true);
 
@@ -20,6 +23,11 @@ async function getCompanies() {
 onMounted(() => {
   getCompanies();
 });
+
+function selectCompany(id) {
+  globalStore.selectCompany(id);
+  router.push("/");
+}
 </script>
 
 <template>
@@ -34,6 +42,7 @@ onMounted(() => {
       class="company-item"
       v-for="company in globalStore.companies"
       :key="company.id"
+      @click="() => selectCompany(company.id)"
     >
       <!-- <img src="" alt=""> -->
       <p class="company-name">{{ company.name }}</p>

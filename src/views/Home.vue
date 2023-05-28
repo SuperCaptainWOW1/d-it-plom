@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from "vue";
 import BottomPanelStoreCreate from "../components/BottomPanelStoreCreate.vue";
+import BottomPanelStoreView from "../components/BottomPanelStoreView.vue";
 import Map from "../components/Map.vue";
 import Navbar from "../components/Navbar.vue";
+import { useGlobalStore } from "../stores/global";
 import { useUserStore } from "../stores/user";
 
 const creatingStoreAddress = ref("");
@@ -12,6 +14,7 @@ const currentPlaceLat = ref(0);
 const isShowPanel = ref(false);
 
 const userStore = useUserStore();
+const globalStore = useGlobalStore();
 </script>
 
 <template>
@@ -29,8 +32,10 @@ const userStore = useUserStore();
     @show-panel="isShowPanel = true"
   />
 
+  <BottomPanelStoreView v-if="globalStore.selectedCompany !== null" />
+
   <BottomPanelStoreCreate
-    v-if="userStore.type === 'creator'"
+    v-else-if="userStore.type === 'creator'"
     :isShowPanel="isShowPanel"
     :address="creatingStoreAddress"
     :lng="currentPlaceLng"
