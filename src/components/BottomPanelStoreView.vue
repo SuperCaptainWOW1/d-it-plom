@@ -17,6 +17,12 @@ const props = defineProps({
 });
 
 const votesNumber = ref(globalStore.selectedCompany.votesNumber);
+
+function editCompany() {
+  if (votesNumber === globalStore.selectedCompany.votesNumber) return;
+
+  globalStore.editCompany(globalStore.selectedCompany, votesNumber.value);
+}
 </script>
 
 <template>
@@ -42,7 +48,7 @@ const votesNumber = ref(globalStore.selectedCompany.votesNumber);
           placeholder="Максимальное коль-во заявок"
         />
 
-        <button class="vote">Сохранить</button>
+        <button class="vote" @click="editCompany">Сохранить</button>
       </template>
     </div>
   </Transition>
