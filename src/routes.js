@@ -24,6 +24,12 @@ const routes = [
     meta: { requiresAuth: true, requiresCreatorRights: true },
     component: Companies,
   },
+  // {
+  //   name: "Votes",
+  //   path: "/votes/:id",
+  //   meta: { requiresAuth: true, requiresUserRights: true },
+  //   component: Votes,
+  // },
   // will match everything and put it under `$route.params.pathMatch`
   { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound },
 ];
@@ -39,6 +45,7 @@ router.beforeEach((to) => {
 
   if (to.meta.requiresAuth && !userStore.username) return "/auth";
   if (to.meta.requiresCreatorRights && userStore.type !== "creator") return "/";
+  if (to.meta.requiresUserRights && userStore.type !== "user") return "/";
 });
 
 export default router;

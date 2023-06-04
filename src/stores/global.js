@@ -4,8 +4,20 @@ import { apiAddress } from "../const";
 export const useGlobalStore = defineStore("global", {
   state: () => ({
     companies: [],
+    companiesVotes: [],
+    categories: [],
     selectedCompany: null,
   }),
+  getters: {
+    getCompanyVotes(id) {
+      return this.companiesVotes.find(c.companyId === id).votesNumbers;
+    },
+    getCategoryItem(categoryId, itemId) {
+      return this.categories
+        .find(c.id === categoryId)
+        .items.find((i) => i.id === itemId);
+    },
+  },
   actions: {
     async getCompanies() {
       this.companies = await (await fetch(`${apiAddress}/companies`)).json();
@@ -29,6 +41,12 @@ export const useGlobalStore = defineStore("global", {
       });
 
       this.getCompanies();
+    },
+    async getCompaniesVotes() {
+      this.companiesVotes = await (await fetch(`${apiAddress}/votes`)).json();
+    },
+    async getCategories() {
+      this.categories = await (await fetch(`${apiAddress}/categories`)).json();
     },
   },
 });
