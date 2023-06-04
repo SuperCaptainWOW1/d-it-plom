@@ -18,9 +18,11 @@ const props = defineProps({
 
 const votesNumber = ref(globalStore.selectedCompany.votesNumber);
 const productsNumber = computed(() => {
-  return globalStore.companiesVotes.find(
-    (vote) => vote.companyId === globalStore.selectedCompany.id
-  ).products.length;
+  return (
+    globalStore.companiesVotes.find(
+      (vote) => vote.companyId === globalStore.selectedCompany.id
+    )?.products.length || null
+  );
 });
 
 function editCompany() {
