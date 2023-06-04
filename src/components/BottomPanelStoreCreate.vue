@@ -63,9 +63,24 @@ async function addCompany() {
   console.log(newCompany);
 
   // Make POST request to db
-  await fetch(`${apiAddress}/companies`, {
+  const createdCompany = await (
+    await fetch(`${apiAddress}/companies`, {
+      method: "POST",
+      body: JSON.stringify(newCompany),
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    })
+  ).json();
+
+  const newVote = {
+    companyId: createdCompany.id,
+    products: [],
+  };
+
+  await fetch(`${apiAddress}/votes`, {
     method: "POST",
-    body: JSON.stringify(newCompany),
+    body: JSON.stringify(newVote),
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
     },
