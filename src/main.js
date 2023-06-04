@@ -14,7 +14,14 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons/faMagnifyin
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons/faPenToSquare";
 import { faTimes } from "@fortawesome/free-solid-svg-icons/faTimes";
 
-library.add(faMagnifyingGlass, faTimes, faBars, faChevronLeft, faPenToSquare);
+library.add(
+  faMagnifyingGlass,
+  faTimes,
+  faBars,
+  faChevronLeft,
+  faPenToSquare,
+  faChevronLeft
+);
 
 const pinia = createPinia();
 

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Auth from "./views/Auth.vue";
+import Categories from "./views/Categories.vue";
 import Companies from "./views/Companies.vue";
 import Home from "./views/Home.vue";
 import NotFound from "./views/NotFound.vue";
@@ -30,6 +31,12 @@ const routes = [
     path: "/votes/:id",
     meta: { requiresAuth: true, requiresUserRights: true },
     component: Votes,
+  },
+  {
+    name: "Categories",
+    path: "/categories",
+    meta: { requiresAuth: true, requiresUserRights: true },
+    component: Categories,
   },
   // will match everything and put it under `$route.params.pathMatch`
   { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound },

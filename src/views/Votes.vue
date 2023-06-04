@@ -14,6 +14,7 @@ const userStore = useUserStore();
 
 const isVotesRecieved = ref(false);
 const votesData = ref({});
+const voteButtonText = ref("Поддержать");
 
 async function getVotes() {
   await globalStore.getCompaniesVotes();
@@ -26,25 +27,38 @@ async function getVotes() {
   isVotesRecieved.value = true;
 }
 
-onMounted(() => {
-  getVotes();
+onMounted(async () => {
+  await getVotes();
 });
 
-function productVote(vote, product) {
-  const alreadyExists = userStore.votedProducts.some((vp) => {
-    return (
-      vp.companyId === vote.companyId &&
-      vp.itemId === product.itemId &&
-      vp.categoryId === product.categoryId
-    );
-  });
+function vote(product) {
+  if (
+    userStore.votedProducts.find((votedProduct) => {
+      return (
+        votedProduct.companyId === globalStore.selectedCompany.id &&
+        votedProduct.categoryId === product.categoryId &&
+        votedProduct.itemId === product.itemId
+      );
+    })
+  ) {
+    userStore.removeVotedProduct(product, globalStore.selectedCompany.id);
+    voteButtonText.value = "Поддержать";
 
-  if (alreadyExists) {
-    globalStore.editVotesNumber(vote, product, product.votesNumber - 1);
-    userStore.removeVotedProduct(product, vote.companyId);
+    globalStore.editVotesNumber(
+      votesData.value,
+      product,
+      product.votesNumber - 1
+    );
   } else {
-    globalStore.editVotesNumber(vote, product, product.votesNumber + 1);
-    userStore.addVotedProduct(product, vote.companyId);
+    userStore.addVotedProduct(product, globalStore.selectedCompany.id);
+    voteButtonText.value = "Отменить";
+
+    console.log(votesData.value);
+    globalStore.editVotesNumber(
+      votesData.value,
+      product,
+      product.votesNumber + 1
+    );
   }
 }
 </script>
@@ -76,7 +90,7 @@ function productVote(vote, product) {
 
       <p class="product-name">
         {{
-          globalStore.getCategoryItem(product.categoryId, product.itemid).name
+          globalStore.getCategoryItem(product.categoryId, product.itemId).name
         }}
       </p>
 
@@ -85,28 +99,17 @@ function productVote(vote, product) {
           {{ product.votesNumber }} /
           {{ globalStore.selectedCompany.votesNumber }} человек
         </p>
-        <button
-          class="product-vote-button"
-          @click="() => productVote(votesData, product)"
-        >
-          {{
-            userStore.votedProducts.some((vp) => {
-              return (
-                vp.companyId === votesData.companyId &&
-                vp.itemId === product.itemId &&
-                vp.categoryId === product.categoryId
-              );
-            })
-              ? "Отменить"
-              : "Поддержать"
-          }}
+        <button class="product-vote-button" @click="() => vote(product)">
+          {{ voteButtonText }}
         </button>
       </div>
     </div>
   </div>
   <Loader v-else />
 
-  <button class="add-request" @click="">Добавить запрос</button>
+  <button class="add-request" @click="$router.push('/categories')">
+    Добавить запрос
+  </button>
 </template>
 
 <style scoped>
@@ -156,6 +159,7 @@ button.add-request {
   padding: 1rem;
   border-radius: 15px;
   box-shadow: 2px 2px 10px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 17px;
 }
 .voted-product-progress-bar {
   position: absolute;

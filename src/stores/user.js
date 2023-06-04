@@ -24,13 +24,11 @@ export const useUserStore = defineStore("user", {
       });
     },
     removeVotedProduct(product, companyId) {
-      this.votedProducts.splice(
-        {
-          companyId,
-          categoryId: product.categoryId,
-          itemId: product.itemId,
-        },
-        1
+      this.votedProducts = this.votedProducts.filter(
+        (votedProduct) =>
+          votedProduct.companyId !== companyId &&
+          votedProduct.categoryId !== product.categoryId &&
+          votedProduct.itemId !== product.itemId
       );
     },
   },

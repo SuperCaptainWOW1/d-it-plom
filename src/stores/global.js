@@ -52,7 +52,6 @@ export const useGlobalStore = defineStore("global", {
       this.categories = await (await fetch(`${apiAddress}/categories`)).json();
     },
     async editVotesNumber(vote, product, newVotesNumber) {
-      // console.log(vote, productId, newVotesNumber);
       const newProducts = vote.products.map((p) => {
         if (p.itemId === product.itemId && p.categoryId === product.categoryId)
           p.votesNumber = newVotesNumber;
@@ -60,7 +59,44 @@ export const useGlobalStore = defineStore("global", {
         return product;
       });
 
-      // console.log(vote.products);
+      await fetch(`${apiAddress}/votes/${vote.id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          id: vote.id,
+          companyId: vote.companyId,
+          products: newProducts,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    },
+
+    async addVoteProduct(vote, categoryId, itemId) {
+      await fetch(`${apiAddress}/votes/${vote.id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          id: vote.id,
+          companyId: vote.companyId,
+          products: [
+            ...vote.products,
+            {
+              categoryId,
+              itemId,
+              votesNumber: 1,
+            },
+          ],
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    },
+    async removeVoteProduct(vote, categoryId, itemId) {
+      console.log(categoryId, itemId);
+      const newProducts = vote.products.filter(
+        (p) => p.categoryId !== categoryId && p.itemId !== itemId
+      );
 
       await fetch(`${apiAddress}/votes/${vote.id}`, {
         method: "PUT",
