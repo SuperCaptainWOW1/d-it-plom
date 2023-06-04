@@ -3,6 +3,7 @@ import Auth from "./views/Auth.vue";
 import Companies from "./views/Companies.vue";
 import Home from "./views/Home.vue";
 import NotFound from "./views/NotFound.vue";
+import Votes from "./views/Votes.vue";
 
 import { useUserStore } from "./stores/user";
 
@@ -24,12 +25,12 @@ const routes = [
     meta: { requiresAuth: true, requiresCreatorRights: true },
     component: Companies,
   },
-  // {
-  //   name: "Votes",
-  //   path: "/votes/:id",
-  //   meta: { requiresAuth: true, requiresUserRights: true },
-  //   component: Votes,
-  // },
+  {
+    name: "Votes",
+    path: "/votes/:id",
+    meta: { requiresAuth: true, requiresUserRights: true },
+    component: Votes,
+  },
   // will match everything and put it under `$route.params.pathMatch`
   { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound },
 ];

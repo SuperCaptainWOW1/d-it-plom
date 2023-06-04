@@ -9,13 +9,16 @@ export const useGlobalStore = defineStore("global", {
     selectedCompany: null,
   }),
   getters: {
-    getCompanyVotes(id) {
-      return this.companiesVotes.find(c.companyId === id).votesNumbers;
+    getCompanyVotes() {
+      return this.companiesVotes.find(
+        (c) => c.companyId === this.selectedCompany.id
+      ).votesNumbers;
     },
-    getCategoryItem(categoryId, itemId) {
-      return this.categories
-        .find(c.id === categoryId)
-        .items.find((i) => i.id === itemId);
+    getCategoryItem: (state) => {
+      return (categoryId, itemId) =>
+        state.categories
+          .find((c) => c.id === categoryId)
+          .items.find((i) => i.id === itemId);
     },
   },
   actions: {

@@ -45,7 +45,12 @@ function close() {
         <p class="votes-number">
           {{ globalStore.selectedCompany.votesNumber }} заявок
         </p>
-        <button class="vote">Голосовать</button>
+        <button
+          class="vote"
+          @click="$router.push(`/votes/${globalStore.selectedCompany.id}`)"
+        >
+          Голосовать
+        </button>
       </template>
 
       <template v-else>
