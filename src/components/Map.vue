@@ -75,11 +75,17 @@ onMounted(() => {
 
   globalStore.getCompanies().then(() => {
     globalStore.companies.forEach((company) => {
-      new mapboxgl.Marker({
+      const marker = new mapboxgl.Marker({
         color: "#60BA62",
       })
         .setLngLat([company.lng, company.lat])
         .addTo(map);
+
+      const markerElement = marker.getElement();
+
+      markerElement.addEventListener("click", () => {
+        globalStore.selectCompany(company.id);
+      });
     });
   });
 });

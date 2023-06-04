@@ -23,11 +23,19 @@ function editCompany() {
 
   globalStore.editCompany(globalStore.selectedCompany, votesNumber.value);
 }
+
+function close() {
+  globalStore.selectCompany(null);
+}
 </script>
 
 <template>
   <Transition name="slide">
     <div class="store-view-block">
+      <span class="close" @click="close">
+        <font-awesome-icon :icon="['fas', 'times']" />
+      </span>
+
       <p class="title">{{ globalStore.selectedCompany.name }}</p>
       <p class="address">{{ globalStore.selectedCompany.address }}</p>
 
@@ -126,5 +134,12 @@ button {
 .votes-number-edit:focus {
   outline: 2px solid rgba(96, 186, 98, 0.6);
   border-bottom: 2px solid transparent;
+}
+
+.close {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.6rem;
+  padding: 0.5rem;
 }
 </style>
