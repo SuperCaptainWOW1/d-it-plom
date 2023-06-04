@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useGlobalStore } from "../stores/global";
 import { useUserStore } from "../stores/user";
 
@@ -17,12 +17,21 @@ const props = defineProps({
 });
 
 const votesNumber = ref(globalStore.selectedCompany.votesNumber);
+const productsNumber = computed(() => {
+  return globalStore.companiesVotes.find(
+    (vote) => vote.companyId === globalStore.selectedCompany.id
+  ).products.length;
+});
 
 function editCompany() {
   if (votesNumber === globalStore.selectedCompany.votesNumber) return;
 
   globalStore.editCompany(globalStore.selectedCompany, votesNumber.value);
 }
+
+onMounted(async () => {
+  await globalStore.getCompaniesVotes();
+});
 
 function close() {
   globalStore.selectCompany(null);
@@ -39,7 +48,10 @@ function close() {
       <p class="title">{{ globalStore.selectedCompany.name }}</p>
       <p class="address">{{ globalStore.selectedCompany.address }}</p>
 
-      <p class="products-number">500 продуктов</p>
+      <p class="products-number">
+        {{ productsNumber }}
+        продуктов
+      </p>
 
       <template v-if="userStore.type !== 'creator'">
         <p class="votes-number">
