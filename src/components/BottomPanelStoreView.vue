@@ -133,7 +133,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 2px solid #60ba62;
+  /* border-bottom: 2px solid #60ba62; */
 }
 
 .votes-number-edit {

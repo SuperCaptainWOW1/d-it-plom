@@ -32,13 +32,13 @@ function quit() {
     >
       Ваши магазины
     </p>
-    <p
+    <!-- <p
       v-else-if="userStore.type === 'user'"
       class="open-list-button"
       @click="gog"
     >
       Ваши заявки
-    </p>
+    </p> -->
 
     <div class="bottom-part">
       <button @click="quit">Выйти</button>
