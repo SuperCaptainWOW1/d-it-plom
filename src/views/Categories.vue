@@ -32,6 +32,11 @@ function goBack() {
 }
 
 function isVoted() {
+  console.log(
+    userStore.votedProducts,
+    activeCategoryId.value,
+    activeCategoryItemId.value
+  );
   return userStore.votedProducts.some(
     (votedProduct) =>
       votedProduct.companyId === globalStore.selectedCompany.id &&
@@ -45,23 +50,61 @@ async function addVote() {
     (vote) => vote.companyId === globalStore.selectedCompany.id
   );
 
-  if (activeCategoryId && activeCategoryItemId && isVoted) {
-    // Edit existing one
-    await globalStore.editVotesNumber(
-      selectedCompanyVote,
-      {
-        categoryId: activeCategoryId.value,
-        itemId: activeCategoryItemId.value,
-        votesNumber: 1,
-      },
-      1
+  const isAlreadyCreated = globalStore.companiesVotes
+    .find((cv) => cv.companyId === globalStore.selectedCompany.id)
+    .products.some(
+      (p) =>
+        p.categoryId === activeCategoryId.value &&
+        p.itemId === activeCategoryItemId.value
     );
+
+  console.log(
+    activeCategoryId.value,
+    activeCategoryItemId.value,
+    isAlreadyCreated,
+    !isVoted()
+  );
+
+  if (
+    activeCategoryId.value &&
+    activeCategoryItemId.value &&
+    isAlreadyCreated
+  ) {
+    if (!isVoted()) {
+      // Edit existing one
+      await globalStore.editVotesNumber(
+        selectedCompanyVote,
+        {
+          categoryId: activeCategoryId.value,
+          itemId: activeCategoryItemId.value,
+        },
+        1
+      );
+
+      userStore.addVotedProduct(
+        {
+          categoryId: activeCategoryId.value,
+          itemId: activeCategoryItemId.value,
+        },
+        globalStore.selectedCompany.id
+      );
+    } else {
+      router.push("/votes");
+    }
   } else {
     // Add new one
     await globalStore.addVoteProduct(
       selectedCompanyVote,
       activeCategoryId.value,
       activeCategoryItemId.value
+    );
+
+    userStore.addVotedProduct(
+      {
+        categoryId: activeCategoryId.value,
+        itemId: activeCategoryItemId.value,
+      },
+      globalStore.selectedCompany.id
     );
   }
 

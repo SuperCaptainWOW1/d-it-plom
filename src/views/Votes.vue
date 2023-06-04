@@ -42,9 +42,17 @@ function isVoted(product) {
 
 function vote(product) {
   if (isVoted(product)) {
-    userStore.removeVotedProduct(product, globalStore.selectedCompany.id);
+    if (product.votesNumber - 1 === 0) {
+      globalStore.removeVoteProduct(
+        votesData.value,
+        product.categoryId,
+        product.itemId
+      );
+    } else {
+      userStore.removeVotedProduct(product, globalStore.selectedCompany.id);
 
-    globalStore.editVotesNumber(votesData.value, product, -1);
+      globalStore.editVotesNumber(votesData.value, product, -1);
+    }
   } else {
     userStore.addVotedProduct(product, globalStore.selectedCompany.id);
 

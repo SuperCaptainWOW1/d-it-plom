@@ -76,6 +76,7 @@ export const useGlobalStore = defineStore("global", {
     },
 
     async addVoteProduct(vote, categoryId, itemId) {
+      console.log(vote, categoryId, itemId);
       await fetch(`${apiAddress}/votes/${vote.id}`, {
         method: "PUT",
         body: JSON.stringify({
@@ -96,17 +97,17 @@ export const useGlobalStore = defineStore("global", {
       });
     },
     async removeVoteProduct(vote, categoryId, itemId) {
-      console.log(categoryId, itemId);
-      const newProducts = vote.products.filter(
-        (p) => p.categoryId !== categoryId && p.itemId !== itemId
+      const removingIndex = vote.products.findIndex(
+        (p) => p.categoryId === categoryId && p.itemId === itemId
       );
+      vote.products.splice(removingIndex, 1);
 
       await fetch(`${apiAddress}/votes/${vote.id}`, {
         method: "PUT",
         body: JSON.stringify({
           id: vote.id,
           companyId: vote.companyId,
-          products: newProducts,
+          products: vote.products,
         }),
         headers: {
           "Content-Type": "application/json",
