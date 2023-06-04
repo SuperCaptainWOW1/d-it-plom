@@ -5,15 +5,23 @@ import NavbarMenu from "../components/NavbarMenu.vue";
 import NavbarSearch from "../components/NavbarSearch.vue";
 
 import { useGlobalStore } from "../stores/global";
+import { useUserStore } from "../stores/user";
 
 const isShowTitle = ref(true);
 
 const globalStore = useGlobalStore();
+const userStore = useUserStore();
+
 const isVotesRecieved = ref(false);
+const votesData = ref({});
 
 async function getVotes() {
   await globalStore.getCompaniesVotes();
   await globalStore.getCategories();
+
+  votesData.value = globalStore.companiesVotes.find(
+    (cv) => cv.companyId === globalStore.selectedCompany.id
+  );
 
   isVotesRecieved.value = true;
 }
@@ -21,6 +29,24 @@ async function getVotes() {
 onMounted(() => {
   getVotes();
 });
+
+function productVote(vote, product) {
+  const alreadyExists = userStore.votedProducts.some((vp) => {
+    return (
+      vp.companyId === vote.companyId &&
+      vp.itemId === product.itemId &&
+      vp.categoryId === product.categoryId
+    );
+  });
+
+  if (alreadyExists) {
+    globalStore.editVotesNumber(vote, product, product.votesNumber - 1);
+    userStore.removeVotedProduct(product, vote.companyId);
+  } else {
+    globalStore.editVotesNumber(vote, product, product.votesNumber + 1);
+    userStore.addVotedProduct(product, vote.companyId);
+  }
+}
 </script>
 
 <template>
@@ -35,28 +61,46 @@ onMounted(() => {
   <div v-if="isVotesRecieved" class="companies-list">
     <div
       class="voted-product"
-      v-for="vote in globalStore.getCompanyVotes"
-      :key="vote.itemId"
+      v-for="product in votesData.products"
+      :key="product.itemId"
     >
       <div
         class="voted-product-progress-bar"
         :style="{
           width:
-            (vote.votesNumber / globalStore.selectedCompany.votesNumber) * 100 +
+            (product.votesNumber / globalStore.selectedCompany.votesNumber) *
+              100 +
             '%',
         }"
       ></div>
 
       <p class="product-name">
-        {{ globalStore.getCategoryItem(vote.categoryId, vote.itemid).name }}
+        {{
+          globalStore.getCategoryItem(product.categoryId, product.itemid).name
+        }}
       </p>
 
       <div class="product-bottom">
         <p class="product-votes-progress">
-          {{ vote.votesNumber }} /
+          {{ product.votesNumber }} /
           {{ globalStore.selectedCompany.votesNumber }} человек
         </p>
-        <button class="product-vote-button">Поддержать</button>
+        <button
+          class="product-vote-button"
+          @click="() => productVote(votesData, product)"
+        >
+          {{
+            userStore.votedProducts.some((vp) => {
+              return (
+                vp.companyId === votesData.companyId &&
+                vp.itemId === product.itemId &&
+                vp.categoryId === product.categoryId
+              );
+            })
+              ? "Отменить"
+              : "Поддержать"
+          }}
+        </button>
       </div>
     </div>
   </div>
