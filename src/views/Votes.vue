@@ -1,7 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import Loader from "../components/Loader.vue";
-import NavbarMenu from "../components/NavbarMenu.vue";
 import NavbarSearch from "../components/NavbarSearch.vue";
 
 import { useGlobalStore } from "../stores/global";
@@ -63,7 +62,11 @@ function vote(product) {
 
 <template>
   <div class="top-bar">
-    <NavbarMenu />
+    <font-awesome-icon
+      @click="$router.push('/')"
+      class="back"
+      :icon="['fas', 'chevron-left']"
+    />
     <div class="top-bar-title">
       <p v-if="isShowTitle">{{ globalStore.selectedCompany.name }}</p>
       <span>Заявки на продукты</span>
@@ -134,6 +137,10 @@ function vote(product) {
   font-size: 1.2rem;
 }
 
+.back {
+  color: #60ba62;
+  font-size: 1.5rem;
+}
 .companies-list {
   margin: 0 32px;
 }
