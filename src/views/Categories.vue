@@ -31,42 +31,41 @@ function goBack() {
   } else router.push(`/votes/${globalStore.selectedCompany.id}`);
 }
 
-async function addVote() {
-  // Check if already created
-  const thisCompanyVotesData = globalStore.companiesVotes.find(
-    (cv) => cv.companyId === globalStore.selectedCompany.id
+function isVoted() {
+  return userStore.votedProducts.some(
+    (votedProduct) =>
+      votedProduct.companyId === globalStore.selectedCompany.id &&
+      votedProduct.categoryId === activeCategoryId.value &&
+      votedProduct.itemId === activeCategoryItemId.value
   );
-  const thisProduct = thisCompanyVotesData.products.find(
-    (product) =>
-      product.categoryId === activeCategoryId.value &&
-      product.itemId === activeCategoryItemId.value
+}
+
+async function addVote() {
+  const selectedCompanyVote = globalStore.companiesVotes.find(
+    (vote) => vote.companyId === globalStore.selectedCompany.id
   );
 
-  if (thisCompanyVotesData && thisProduct) {
+  if (activeCategoryId && activeCategoryItemId && isVoted) {
+    // Edit existing one
     await globalStore.editVotesNumber(
-      thisCompanyVotesData,
-      thisProduct,
-      thisProduct.votesNumber + 1
-    );
-    userStore.addVotedProduct(
-      activeCategoryId.value,
-      activeCategoryItemId.value,
-      thisCompanyVotesData.companyId
+      selectedCompanyVote,
+      {
+        categoryId: activeCategoryId.value,
+        itemId: activeCategoryItemId.value,
+        votesNumber: 1,
+      },
+      1
     );
   } else {
+    // Add new one
     await globalStore.addVoteProduct(
-      thisCompanyVotesData,
+      selectedCompanyVote,
       activeCategoryId.value,
       activeCategoryItemId.value
     );
-    userStore.addVotedProduct(
-      activeCategoryId.value,
-      activeCategoryItemId.value,
-      thisCompanyVotesData.companyId
-    );
   }
 
-  router.push(`/votes/${thisCompanyVotesData.id}`);
+  router.push("/votes");
 }
 </script>
 

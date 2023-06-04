@@ -28,7 +28,7 @@ const routes = [
   },
   {
     name: "Votes",
-    path: "/votes/:id",
+    path: "/votes",
     meta: { requiresAuth: true, requiresUserRights: true },
     component: Votes,
   },

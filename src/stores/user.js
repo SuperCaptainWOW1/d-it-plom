@@ -24,12 +24,14 @@ export const useUserStore = defineStore("user", {
       });
     },
     removeVotedProduct(product, companyId) {
-      this.votedProducts = this.votedProducts.filter(
-        (votedProduct) =>
-          votedProduct.companyId !== companyId &&
-          votedProduct.categoryId !== product.categoryId &&
-          votedProduct.itemId !== product.itemId
+      const removingIndex = this.votedProducts.findIndex(
+        (vp) =>
+          vp.companyId === companyId &&
+          vp.categoryId === product.categoryId &&
+          vp.itemId === product.itemId
       );
+
+      this.votedProducts.splice(removingIndex, 1);
     },
   },
 });

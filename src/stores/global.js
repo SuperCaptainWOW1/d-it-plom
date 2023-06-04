@@ -15,10 +15,11 @@ export const useGlobalStore = defineStore("global", {
       ).products;
     },
     getCategoryItem: (state) => {
-      return (categoryId, itemId) =>
-        state.categories
+      return (categoryId, itemId) => {
+        return state.categories
           .find((c) => c.id === categoryId)
           .items.find((i) => i.id === itemId);
+      };
     },
   },
   actions: {
@@ -51,12 +52,14 @@ export const useGlobalStore = defineStore("global", {
     async getCategories() {
       this.categories = await (await fetch(`${apiAddress}/categories`)).json();
     },
-    async editVotesNumber(vote, product, newVotesNumber) {
-      const newProducts = vote.products.map((p) => {
-        if (p.itemId === product.itemId && p.categoryId === product.categoryId)
-          p.votesNumber = newVotesNumber;
-
-        return product;
+    async editVotesNumber(vote, product, number) {
+      vote.products.forEach((p) => {
+        if (
+          p.itemId === product.itemId &&
+          p.categoryId === product.categoryId
+        ) {
+          p.votesNumber += number;
+        }
       });
 
       await fetch(`${apiAddress}/votes/${vote.id}`, {
@@ -64,7 +67,7 @@ export const useGlobalStore = defineStore("global", {
         body: JSON.stringify({
           id: vote.id,
           companyId: vote.companyId,
-          products: newProducts,
+          products: vote.products,
         }),
         headers: {
           "Content-Type": "application/json",

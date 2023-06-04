@@ -14,7 +14,6 @@ const userStore = useUserStore();
 
 const isVotesRecieved = ref(false);
 const votesData = ref({});
-const voteButtonText = ref("Поддержать");
 
 async function getVotes() {
   await globalStore.getCompaniesVotes();
@@ -31,34 +30,25 @@ onMounted(async () => {
   await getVotes();
 });
 
-function vote(product) {
-  if (
-    userStore.votedProducts.find((votedProduct) => {
-      return (
-        votedProduct.companyId === globalStore.selectedCompany.id &&
-        votedProduct.categoryId === product.categoryId &&
-        votedProduct.itemId === product.itemId
-      );
-    })
-  ) {
-    userStore.removeVotedProduct(product, globalStore.selectedCompany.id);
-    voteButtonText.value = "Поддержать";
-
-    globalStore.editVotesNumber(
-      votesData.value,
-      product,
-      product.votesNumber - 1
+function isVoted(product) {
+  return userStore.votedProducts.some((votedProduct) => {
+    return (
+      votedProduct.companyId === globalStore.selectedCompany.id &&
+      votedProduct.categoryId === product.categoryId &&
+      votedProduct.itemId === product.itemId
     );
+  });
+}
+
+function vote(product) {
+  if (isVoted(product)) {
+    userStore.removeVotedProduct(product, globalStore.selectedCompany.id);
+
+    globalStore.editVotesNumber(votesData.value, product, -1);
   } else {
     userStore.addVotedProduct(product, globalStore.selectedCompany.id);
-    voteButtonText.value = "Отменить";
 
-    console.log(votesData.value);
-    globalStore.editVotesNumber(
-      votesData.value,
-      product,
-      product.votesNumber + 1
-    );
+    globalStore.editVotesNumber(votesData.value, product, 1);
   }
 }
 </script>
@@ -99,8 +89,11 @@ function vote(product) {
           {{ product.votesNumber }} /
           {{ globalStore.selectedCompany.votesNumber }} человек
         </p>
-        <button class="product-vote-button" @click="() => vote(product)">
-          {{ voteButtonText }}
+        <button
+          class="product-vote-button"
+          @click.prevent="() => vote(product)"
+        >
+          {{ isVoted(product) ? "Отменить" : "Поддержать" }}
         </button>
       </div>
     </div>
